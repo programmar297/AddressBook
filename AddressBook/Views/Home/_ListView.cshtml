@@ -1,0 +1,106 @@
+﻿@model IPagedList<AddressBook.Data.AddressRecord>
+@{
+    int pageNum = Convert.ToInt32(ViewData["page"]);
+    int pageSize = Convert.ToInt32(ViewData["size"]);
+    string searchVal = ViewData["search"].ToString();
+    PagedListRenderOptions options = PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "listView", OnComplete = "onPageChange" });
+
+}
+<input type="hidden" id="hidPageNum" value="@pageNum" />
+<input type="hidden" id="hidPageSize" value="@pageSize" />
+<input type="hidden" id="hidSearch" value="@searchVal" />
+
+
+@if (Model != null && Model.Any())
+{
+    int firstRec = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+    int lastRec = (firstRec - 1) + Model.Count;
+    <div class="row">
+        <div class='col col-xs-12'>
+            <table class='table table-responsive' id="tblApList-1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-mail Address</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Job Title</th>
+                        <th>Institution</th> 
+                        <th>&nbsp;</th>                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 1; i <= Model.Count; i++)
+                    {
+                        string address = Model[i - 1].Address == null ? "<span class='text-muted'>Empty</span>" : "<a href='#' class='btnMap'>" + Model[i - 1].Address + "</a>";
+                        string phoneNo = Model[i - 1].PhoneNo == null ? "<span class='text-muted'>Empty</span>" : Model[i - 1].PhoneNo;
+                        string job = Model[i - 1].JobPosition == null ? "<span class='text-muted'>Empty</span>" : Model[i - 1].JobPosition;
+                        string inst = Model[i - 1].Institute == null ? "<span class='text-muted'>Empty</span>" : Model[i - 1].Institute;
+
+                        <tr id="tr-@Model[i - 1].Id">
+                            <td style="width: auto;">
+                                <strong>@Model[i - 1].Name</strong>
+                            </td>
+                            <td style="width: auto;"> @Model[i - 1].Email </td>
+                            <td style="width: auto;"> @Html.Raw(address) </td>
+                            <td style="width: auto;"> @Html.Raw(phoneNo) </td>
+                            <td style="width: auto;"> @Html.Raw(job) </td>
+                            <td style="width: auto;"> @Html.Raw(inst) </td>
+                            <td style="width: auto;">
+                                <a href="#" class="editBtn btn btn-info" data-id="@Model[i - 1].Id"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+                                <a href="#" class="deltBtn btn btn-danger" data-id="@Model[i - 1].Id"><i class="glyphicon glyphicon-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                           
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+        @Html.PagedListPager(Model, p => Url.Action("Search", "Home", new { page = p, size = pageSize, search = searchVal }, null), options)
+        <div class="row">
+            <div class="col col-xs-3">
+                Page Size:
+                @if (Model.PageSize == 10)
+                {
+                    <text>10</text>
+                }
+                else
+                {
+                    <a href="#" class="record-control" data-rec="10">10</a>
+                }
+
+                @if (Model.PageSize == 30)
+                {
+                    <text>30</text>
+                }
+                else
+                {
+                    <a href="#" class="record-control" data-rec="30">30</a>
+                }
+                @if (Model.PageSize == 50)
+                {
+                    <text>50</text>
+                }
+                else
+                {
+                    <a href="#" class="record-control" data-rec="50">50</a>
+                }
+                addresses per page
+
+            </div>
+            <div class="col col-xs-5">
+                Showing: @firstRec - @lastRec / @Model.TotalItemCount addresses
+            </div>
+
+        </div>
+
+
+}
+else
+{
+    <div class="col col-xs-12 text-center text-muted" style="height:50px;line-height:50px;" id="nodata">
+        <h2>Address Book is Empty</h2>
+    </div>
+}

@@ -1,0 +1,65 @@
+﻿@model AddressBook.ViewModels.AddressListViewModel
+@{
+    ViewBag.Title = "List";
+
+    bool error = Convert.ToBoolean(ViewData["error"]);
+    string msg = ViewData["msg"].ToString();
+    string showError = error ? "true" : "false";
+}
+<input type="hidden" id="hidshowError" value="@showError" />
+<input type="hidden" id="hidshowMsg" value="@msg" />
+<h3 class="pull-left">Address List</h3>
+<div class="loader pull-left">
+    <img src="@Url.Content("~/Content/images/loading.gif")" alt="LOADING" />
+</div>
+<div class="row">
+    <div class="col-xs-12">        
+        <div class="form-group row">
+            <div class="col-xs-1">
+                <button id="btnAdd" class="btn btn-success">
+                    <i class="glyphicon glyphicon-plus"></i> Add
+                </button>
+            </div>
+            <div class="col-xs-11 input-group">
+                <input type="text" id="txtSearch" class="form-control" placeholder="Search addresses" aria-describedby="search-addon" />
+                <span class="input-group-addon" id="search-addon"><i class="glyphicon glyphicon-search"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-xs-12" id="listView">
+        @{ Html.RenderPartial("_ListView", Model.AddressList, new ViewDataDictionary { { "page", Model.PageNumber }, { "size", Model.PageSize }, { "search", Model.SearchValue } }); }
+    </div>
+</div>
+@section pagemodals{
+<div id="dlgAddress" class="modal fade" role="dialog">
+    <div class="modal-dialog dialog-info">
+        <div class="modal-content" id="modal_container">
+        </div>
+    </div>
+</div>
+<div id="dlgMap" class="modal fade" role="dialog">
+    <div class="modal-dialog dialog-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Geo coded map</h4>
+            </div>
+            <div class="modal-body">
+                <div id="map" style="width:100%;height:400px">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@section scripts{
+    <script src="@Url.Content("~/Scripts/addressbook/jQuery.home.js")"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOZstkygwsbejwnGxtZ0RHNjb7Y1U5E6I&callback=loadMap">
+    </script>
+
+}
