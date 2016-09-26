@@ -177,6 +177,7 @@
     <Content Include="App_Data\AddressBook_log.ldf">
       <DependentUpon>AddressBook.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Data\readme.txt" />
     <Content Include="Content\addressbook.css" />
     <Content Include="Content\Bootstrap\bootstrap.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
