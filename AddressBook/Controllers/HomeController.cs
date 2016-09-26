@@ -52,6 +52,11 @@ namespace AddressBook.Controllers
                 addressList = AddressData.GetAllRecords();
             else
                 addressList = AddressData.GetAllRecords(search);
+            
+            int records = addressList.Count;
+            if (records <= ((cur_page - 1) * cur_size))
+                cur_page = cur_page - 1;
+
             IPagedList<AddressRecord> result = addressList != null && addressList.Any() ? addressList.ToPagedList(cur_page, cur_size) : null;
             ViewData["page"] = cur_page;
             ViewData["size"] = cur_size;
