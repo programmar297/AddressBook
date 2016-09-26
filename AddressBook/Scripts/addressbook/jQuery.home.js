@@ -53,6 +53,7 @@ function createModal(id) {
                     else {
                         hookEdit(".editBtn");
                         hookDelete(".deltBtn");
+                        hookMap();
                         showAlert("Error occured", $('#txtEmail').val() + " already exists in the database, please add a new e-mail address", true);
                         $('#btnSave').removeClass('active');
                         return false;
@@ -85,6 +86,7 @@ function checkRequired() {
     } else {
         hookEdit(".editBtn");
         hookDelete(".deltBtn");
+        hookMap();
         showAlert("Error", mes, true);
         return false;
     }
@@ -101,6 +103,7 @@ function loadTable() {
         $("#listView").append(returnHtml);
         hookEdit(".editBtn");
         hookDelete(".deltBtn");
+        hookMap();
         hookPaging();
         $(".loader").hide();
         $('.btnMap').unbind('click');
@@ -117,6 +120,7 @@ function onPageChange() {
     hookPaging();
     hookEdit(".editBtn");
     hookDelete(".deltBtn");
+    hookMap();
 }
 //function: hookEdit
 //Edit button hook on DOM refresh
@@ -154,6 +158,15 @@ function hookPaging() {
         loadTable();
     }); 
 }
+//function: hookMap
+//Controls the record display for Map Popup
+function hookMap() {
+    $('.btnMap').click(function () {
+        var address = $(this).text();
+        getAddress(address);
+        createMapModal();
+    });
+}
 //function: submitAddress(data) : data is the JSON data returned from the server
 // fires after the record has been process for submission. 
 function submitAddress(data) {
@@ -170,11 +183,13 @@ function submitAddress(data) {
 
         hookEdit(".editBtn");
         hookDelete(".deltBtn");
+        hookMap();
         showAlert("Success", message, false);
 
     } else {
         hookEdit(".editBtn");
         hookDelete(".deltBtn");
+        hookMap();
         showAlert("Error", data.Message, true);
     }
 }
@@ -264,17 +279,13 @@ $(function () {
     hookPaging();
     hookEdit(".editBtn");
     hookDelete(".deltBtn");
-
+    hookMap();
     $("#txtSearch").keyup(function () {
         $(".loader").show();
         loadTable();
         return false;
     });
 
-    $('.btnMap').click(function () {
-        var address = $(this).text();
-        getAddress(address);
-        createMapModal();
-    });
+   
 
 });
